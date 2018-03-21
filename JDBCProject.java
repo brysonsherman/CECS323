@@ -149,7 +149,7 @@ public class JDBCProject
                     case 4: // List all the data for a publisher specified by the user.
                         System.out.println("\nWhich publisher would you like to know about?");
                         
-                        //SELECT * FROM publishers NATURAL JOIN books NATURAL JOIN writingGroups WHERE publisherName = ?;
+                        //SELECT * FROM publishers NATURAL JOIN books NATURAL JOIN writingGroups WHERE publisherName = '';
                         String publisherStatement = "SELECT * FROM publishers LEFT OUTER JOIN books ON publishers.PUBLISHERNAME = books.PUBLISHERNAME "
                                 + "LEFT OUTER JOIN writingGroups ON books.GROUPNAME = writingGroups.GROUPNAME WHERE publishers.PUBLISHERNAME = ?";
                         PreparedStatement preparedPublisherStatement = connection.prepareStatement(publisherStatement);
@@ -256,32 +256,68 @@ public class JDBCProject
                         break;
                     case 7: // Insert a new book.
                         String addBookStatement = "insert into books(groupName, bookTitle, publisherName, yearPublished, numberPages) values (?, ?, ?, ?, ?)";
-                        PreparedStatement preparedAddStatement = connection.prepareStatement(addBookStatement);
+                        PreparedStatement preparedAddBookStatement = connection.prepareStatement(addBookStatement);
 
                         System.out.print("To insert a new book into the database, we're going to need some information."
-                                + "\nWhat is the name of the writing group for the book. ");
+                                + "\nWhat is the name of the writing group for the book? ");
                         String addGroupName = displayNull(getStringInput(in));
-                        System.out.print("\nNext, what is the title of the book. ");
+                        System.out.print("\nNext, what is the title of the book? ");
                         String addBookTitle = displayNull(getStringInput(in));
-                        System.out.print("\nWhat is the name of the publisher for the book. ");
+                        System.out.print("\nWhat is the name of the publisher for the book? ");
                         String addPublisherName = displayNull(getStringInput(in));
-                        System.out.print("\nWhat is the publication year for the book. ");
+                        System.out.print("\nWhat is the publication year for the book? ");
                         int addYearPublished = getIntInput(in);
                         System.out.print("\nHow many pages does the book have. ");
                         int addNumberPages = getIntInput(in);
 
-                        preparedAddStatement.setString(1, addGroupName);
-                        preparedAddStatement.setString(2, addBookTitle);
-                        preparedAddStatement.setString(3, addPublisherName);
-                        preparedAddStatement.setInt(4, addYearPublished);
-                        preparedAddStatement.setInt(5, addNumberPages);
+                        preparedAddBookStatement.setString(1, addGroupName);
+                        preparedAddBookStatement.setString(2, addBookTitle);
+                        preparedAddBookStatement.setString(3, addPublisherName);
+                        preparedAddBookStatement.setInt(4, addYearPublished);
+                        preparedAddBookStatement.setInt(5, addNumberPages);
 
-                        preparedAddStatement.executeUpdate();
+                        preparedAddBookStatement.executeUpdate();
 
                         System.out.println("\n-----------------------------------------------------------------------------------------------------------------------"
                                 + "------------------------------------------------------------------------------------------------------------------------------------");
                         break;
                     case 8: // TODO: Insert a new publisher and update all books published by one publisher to be published by the new publisher.
+                        
+                        // Insert New Publisher
+                        String addPublisherStatement = "insert into publishers(publisherName, publisherAddress, publisherPhone, publisherEmail) "
+                                + "values (?, ?, ?, ?)";
+                        PreparedStatement preparedAddPublisherStatement = connection.prepareStatement(addPublisherStatement);
+                        
+                        System.out.print("To insert a new publisher into the database, we're going to need some information."
+                                + "\nWhat is the name of the publisher? ");
+                        String addPublisherNameCase8 = displayNull(getStringInput(in));
+                        System.out.print("\nNext, what is the address of the publisher? ");
+                        String addPublisherAddress = displayNull(getStringInput(in));
+                        System.out.print("\nWhat is the phone number of the publisher? ");
+                        String addPublisherPhone = displayNull(getStringInput(in));
+                        System.out.print("\nFinally, what is the publisher's email? ");
+                        String addPublisherEmail = displayNull(getStringInput(in));
+                        
+                        preparedAddPublisherStatement.setString(1, addPublisherNameCase8);
+                        preparedAddPublisherStatement.setString(2, addPublisherAddress);
+                        preparedAddPublisherStatement.setString(3, addPublisherPhone);
+                        preparedAddPublisherStatement.setString(4, addPublisherEmail);
+                        
+                        preparedAddPublisherStatement.executeUpdate();
+                        // Finish Insert New Publisher
+                        
+                        // Update all books published by one publisher to be published by the new publisher.
+                        String updateBooksPublisher = "UPDATE books SET publisherName = addPublisherNameCase8 WHERE publisherName = ?";
+                        PreparedStatement preparedUpdateBooksPublisherStatement = connection.prepareStatement(updateBooksPublisher);
+                        
+                        System.out.print("Books published by which publisher are to be updated? ");
+                        String updateBooksWithThisPublisher = displayNull(getStringInput(in));
+                        
+                        preparedUpdateBooksPublisherStatement.setString(1,updateBooksWithThisPublisher);
+                        
+                        preparedUpdateBooksPublisherStatement.executeUpdate();
+                        // Finish updating
+                        
                         break;
                     case 9: // Remove a book specified by the user.
                         System.out.print("\nWhich book would you like to remove?");
