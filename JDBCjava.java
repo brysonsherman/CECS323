@@ -95,9 +95,9 @@ public class JDBCSampleSource {
         //System.out.print("Name of the database (not the user account): ");
         DBNAME = "JDBC";
         System.out.print("Database user name: ");
-        USER = "ethan";
+        USER = "mimi";
         System.out.print("Database password: ");
-        PASS = "1234";
+        PASS = "opkins";
         //Constructing the database URL connection string
         DB_URL = DB_URL + DBNAME + ";user="+ USER + ";password=" + PASS;
         Connection conn = null; //initialize the connection
