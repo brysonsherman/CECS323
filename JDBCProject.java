@@ -149,7 +149,7 @@ public class JDBCProject
                     case 4: // List all the data for a publisher specified by the user.
                         System.out.println("\nWhich publisher would you like to know about?");
                         
-                        //SELECT * FROM publishers NATURAL JOIN books NATURAL JOIN writingGroups WHERE publisherName = '';
+                        //SELECT * FROM publishers NATURAL JOIN books NATURAL JOIN writingGroups WHERE publisherName = ?;
                         String publisherStatement = "SELECT * FROM publishers LEFT OUTER JOIN books ON publishers.PUBLISHERNAME = books.PUBLISHERNAME "
                                 + "LEFT OUTER JOIN writingGroups ON books.GROUPNAME = writingGroups.GROUPNAME WHERE publishers.PUBLISHERNAME = ?";
                         PreparedStatement preparedPublisherStatement = connection.prepareStatement(publisherStatement);
