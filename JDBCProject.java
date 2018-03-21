@@ -96,41 +96,38 @@ public class JDBCProject
                         String gName = displayNull(getStringInput(in));
                         preparedWritingStatement.setString(1, gName);
                         rs = preparedWritingStatement.executeQuery();
-                        
-                        System.out.println(rs.next());
-                        
-                        if(rs.next() == false)
-                        {
-                            if(gName.equals("N/A"))
-                                System.err.println("-NO INPUT GIVEN-");
-                            else
-                                System.err.println("Group Name '" + gName + "' was not found in the database.");
-                        } else
-                        {
-                            while(rs.next())
-                            {
-                                // Retrieve by column name
-                                String groupName = rs.getString("groupName");
-                                String headWriter = rs.getString("headWriter");
-                                String yearFormed = rs.getString("yearFormed");
-                                String subject = rs.getString("subject");
-                                String bookTitle = rs.getString("bookTitle");
-                                String yearPublished = rs.getString("yearPublished");
-                                String numberPages = rs.getString("numberPages");
-                                String publisherName = rs.getString("publisherName");
-                                String publisherAddress = rs.getString("publisherAddress");
-                                String publisherPhone = rs.getString("publisherPhone");
-                                String publisherEmail = rs.getString("publisherEmail");
-                                
-                                // Display values
-                                System.out.println();
-                                System.out.printf(displayFormatWritingGroups, "Group Name", "Head Writer", "Year Formed", "Subject", 
-                                    "Book Title", "Year Published", "# of Pages", 
+
+                        boolean groupFound = false;
+
+                        while (rs.next()) {
+                            // Retrieve by column name
+                            String groupName = rs.getString("groupName");
+                            String headWriter = rs.getString("headWriter");
+                            String yearFormed = rs.getString("yearFormed");
+                            String subject = rs.getString("subject");
+                            String bookTitle = rs.getString("bookTitle");
+                            String yearPublished = rs.getString("yearPublished");
+                            String numberPages = rs.getString("numberPages");
+                            String publisherName = rs.getString("publisherName");
+                            String publisherAddress = rs.getString("publisherAddress");
+                            String publisherPhone = rs.getString("publisherPhone");
+                            String publisherEmail = rs.getString("publisherEmail");
+
+                            // Display values
+                            System.out.println();
+                            groupFound = true;
+                            System.out.printf(displayFormatWritingGroups, "Group Name", "Head Writer", "Year Formed", "Subject",
+                                    "Book Title", "Year Published", "# of Pages",
                                     "Publisher Name", "Publisher Address", "Publisher Phone #", "Publisher Email");
-                                System.out.printf(displayFormatWritingGroups, displayNull(groupName), displayNull(headWriter), displayNull(yearFormed), displayNull(subject),
+                            System.out.printf(displayFormatWritingGroups, displayNull(groupName), displayNull(headWriter), displayNull(yearFormed), displayNull(subject),
                                     displayNull(bookTitle), displayNull(yearPublished), displayNull(numberPages), displayNull(publisherName), displayNull(publisherAddress),
                                     displayNull(publisherPhone), displayNull(publisherEmail));
-                            }
+                        }
+                        if (!groupFound) {
+                            if (gName.equals("N/A")) 
+                                System.err.println("-NO INPUT GIVEN-");
+                            else 
+                                System.err.println("Group Name '" + gName + "' was not found in the database.");
                         }
                         
                         System.out.println("\n-----------------------------------------------------------------------------------------------------------------------"
@@ -156,7 +153,35 @@ public class JDBCProject
                         preparedPublisherStatement.setString(1, pName);
                         rs = preparedPublisherStatement.executeQuery();
 
-                        if (rs.next() == false)
+                        boolean publisherFound = false;
+                        
+                        while (rs.next())
+                        {
+                            // Retrieve by column name
+                            String publisherName = rs.getString("publisherName");
+                            String publisherAddress = rs.getString("publisherAddress");
+                            String publisherPhone = rs.getString("publisherPhone");
+                            String publisherEmail = rs.getString("publisherEmail");
+                            String bookTitle = rs.getString("bookTitle");
+                            String yearPublished = rs.getString("yearPublished");
+                            String numberPages = rs.getString("numberPages");
+                            String groupName = rs.getString("groupName");
+                            String headWriter = rs.getString("headWriter");
+                            String yearFormed = rs.getString("yearFormed");
+                            String subject = rs.getString("subject");
+
+                            // Display values
+                            System.out.println();
+                            publisherFound = true;
+                            System.out.printf(displayFormatPublishers, "Publisher Name", "Publisher Address", "Publisher Phone #", "Publisher Email",
+                                    "Book Title", "Year Published", "# of Pages",
+                                    "Group Name", "Head Writer", "Year Formed", "Subject");
+                            System.out.printf(displayFormatPublishers, displayNull(publisherName), displayNull(publisherAddress),
+                                    displayNull(publisherPhone), displayNull(publisherEmail), displayNull(bookTitle),
+                                    displayNull(yearPublished), displayNull(numberPages), displayNull(groupName),
+                                    displayNull(headWriter), displayNull(yearFormed), displayNull(subject));
+                        }
+                        if (!publisherFound)
                         {
                             if (pName.equals("N/A"))
                             {
@@ -164,33 +189,6 @@ public class JDBCProject
                             } else
                             {
                                 System.err.println("Publisher Name '" + pName + "' was not found in the database.");
-                            }
-                        } else
-                        {
-                            while (rs.next())
-                            {
-                                // Retrieve by column name
-                                String publisherName = rs.getString("publisherName");
-                                String publisherAddress = rs.getString("publisherAddress");
-                                String publisherPhone = rs.getString("publisherPhone");
-                                String publisherEmail = rs.getString("publisherEmail");
-                                String bookTitle = rs.getString("bookTitle");
-                                String yearPublished = rs.getString("yearPublished");
-                                String numberPages = rs.getString("numberPages");
-                                String groupName = rs.getString("groupName");
-                                String headWriter = rs.getString("headWriter");
-                                String yearFormed = rs.getString("yearFormed");
-                                String subject = rs.getString("subject");
-
-                                // Display values
-                                System.out.println();
-                                System.out.printf(displayFormatPublishers, "Publisher Name", "Publisher Address", "Publisher Phone #", "Publisher Email",
-                                        "Book Title", "Year Published", "# of Pages",
-                                        "Group Name", "Head Writer", "Year Formed", "Subject");
-                                System.out.printf(displayFormatPublishers, displayNull(publisherName), displayNull(publisherAddress),
-                                        displayNull(publisherPhone), displayNull(publisherEmail), displayNull(bookTitle),
-                                        displayNull(yearPublished), displayNull(numberPages), displayNull(groupName),
-                                        displayNull(headWriter), displayNull(yearFormed), displayNull(subject));
                             }
                         }
                         System.out.println("\n-----------------------------------------------------------------------------------------------------------------------"
@@ -214,46 +212,40 @@ public class JDBCProject
                         String bName = displayNull(getStringInput(in));
                         preparedBookStatement.setString(1, bName);
                         rs = preparedBookStatement.executeQuery();
-
                         
-                        //System.out.println(preparedBookStatement);
-                        //System.out.println(rs);
+                        boolean bookFound = false;
                         
-                        if (rs.next() == false) 
+                        while (rs.next())
                         {
-                            if (bName.equals("N/A")) 
-                            {
+                            // Retrieve by column name
+                            String bookTitle = rs.getString("bookTitle");
+                            String yearPublished = rs.getString("yearPublished");
+                            String numberPages = rs.getString("numberPages");
+                            String publisherName = rs.getString("publisherName");
+                            String publisherAddress = rs.getString("publisherAddress");
+                            String publisherPhone = rs.getString("publisherPhone");
+                            String publisherEmail = rs.getString("publisherEmail");
+                            String groupName = rs.getString("groupName");
+                            String headWriter = rs.getString("headWriter");
+                            String yearFormed = rs.getString("yearFormed");
+                            String subject = rs.getString("subject");
+
+                            // Display values
+                            System.out.println();
+                            bookFound = true;
+                            System.out.printf(displayFormatBooks, "Book Title", "Year Published", "# of Pages",
+                                    "Publisher Name", "Publisher Address", "Publisher Phone #", "Publisher Email",
+                                    "Group Name", "Head Writer", "Year Formed", "Subject");
+                            System.out.printf(displayFormatBooks, displayNull(bookTitle), displayNull(yearPublished), displayNull(numberPages),
+                                    displayNull(publisherName), displayNull(publisherAddress), displayNull(publisherPhone), displayNull(publisherEmail),
+                                    displayNull(groupName), displayNull(headWriter), displayNull(yearFormed), displayNull(subject));
+                        }
+                        if (!bookFound)
+                        {
+                            if (bName.equals("N/A"))
                                 System.err.println("-NO INPUT GIVEN-");
-                            } else
-                            {
+                            else
                                 System.err.println("Book Title '" + bName + "' was not found in the database.");
-                            }
-                        } else 
-                        {
-                            while (rs.next()) 
-                            {
-                                // Retrieve by column name
-                                String bookTitle = rs.getString("bookTitle");
-                                String yearPublished = rs.getString("yearPublished");
-                                String numberPages = rs.getString("numberPages");
-                                String publisherName = rs.getString("publisherName");
-                                String publisherAddress = rs.getString("publisherAddress");
-                                String publisherPhone = rs.getString("publisherPhone");
-                                String publisherEmail = rs.getString("publisherEmail");
-                                String groupName = rs.getString("groupName");
-                                String headWriter = rs.getString("headWriter");
-                                String yearFormed = rs.getString("yearFormed");
-                                String subject = rs.getString("subject");
-
-                                // Display values
-                                System.out.println();
-                                System.out.printf(displayFormatBooks, "Book Title", "Year Published", "# of Pages",
-                                        "Publisher Name", "Publisher Address", "Publisher Phone #", "Publisher Email",
-                                        "Group Name", "Head Writer", "Year Formed", "Subject");
-                                System.out.printf(displayFormatBooks, displayNull(bookTitle), displayNull(yearPublished), displayNull(numberPages),
-                                        displayNull(publisherName), displayNull(publisherAddress), displayNull(publisherPhone), displayNull(publisherEmail),
-                                        displayNull(groupName), displayNull(headWriter), displayNull(yearFormed), displayNull(subject));
-                            }
                         }
                         System.out.println("\n-----------------------------------------------------------------------------------------------------------------------"
                                 + "------------------------------------------------------------------------------------------------------------------------------------");
