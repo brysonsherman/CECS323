@@ -89,6 +89,8 @@ public class JDBCProject
                         break;
                     case 2: // List all the data for a writing group specified by the user.
                         System.out.println("\nWhich group would you like to know about?");
+                        
+                        //SELECT * FROM writingGroups NATURAL JOIN books NATURAL JOIN publishers WHERE groupName = ?;
                         String writingStatement = "SELECT * FROM writingGroups LEFT OUTER JOIN books ON writingGroups.GROUPNAME = books.GROUPNAME"
                                 + " LEFT OUTER JOIN publishers ON books.PUBLISHERNAME = publishers.PUBLISHERNAME WHERE writingGroups.GROUPNAME = ?";
 
@@ -146,6 +148,8 @@ public class JDBCProject
                         break;
                     case 4: // List all the data for a publisher specified by the user.
                         System.out.println("\nWhich publisher would you like to know about?");
+                        
+                        //SELECT * FROM publishers NATURAL JOIN books NATURAL JOIN writingGroups WHERE publisherName = ?;
                         String publisherStatement = "SELECT * FROM publishers LEFT OUTER JOIN books ON publishers.PUBLISHERNAME = books.PUBLISHERNAME "
                                 + "LEFT OUTER JOIN writingGroups ON books.GROUPNAME = writingGroups.GROUPNAME WHERE publishers.PUBLISHERNAME = ?";
                         PreparedStatement preparedPublisherStatement = connection.prepareStatement(publisherStatement);
